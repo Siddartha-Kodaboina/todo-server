@@ -1,10 +1,11 @@
-import express from 'express';
-import bodyParser from 'body-parser';
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+require('dotenv').config();
 
-import db from "./mongoConfig.js";
+const db = require('./mongoConfig.js');
 
 const port = 4000;
-const app = express();
 
 app.use((_req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
