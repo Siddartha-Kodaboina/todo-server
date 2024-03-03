@@ -25,7 +25,7 @@ jobs:
       - name: Current working directory
         run: pwd
       - name: Active running jobs with active-runner
-        run: sudo -u runner-user docker ps
+        run: ps aux | grep actions-runner
       - name: Pull image from dockerhub
         run: docker pull stevesiddu49/todo-server:latest
       - name: Delete old Container
