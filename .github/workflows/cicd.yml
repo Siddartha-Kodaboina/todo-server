@@ -25,6 +25,6 @@ jobs:
       - name: Pull image from dockerhub
         run: docker pull stevesiddu49/todo-server:latest
       - name: Delete old Container
-        run: docker rm -f todo-server-container
+        run: docker rm -f todo-sever-container
       - name: Run Docker Container
-        run: docker run -d -p 4000:4000 --name todo-server-container -e MONGO_DB_PASSWORD='${{ secrets.MONGO_DB_PASSWORD }}' stevesiddu49/todo-server
+        run: docker run -d -p 4000:4000 --name todo-sever-container -e MONGO_DB_PASSWORD='${{ secrets.MONGO_DB_PASSWORD }}' stevesiddu49/todo-server
