@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import db from "./mongoC.js";
+import db from "./mongoConfig.js";
 
 const port = 4000;
 const app = express();
@@ -23,22 +23,22 @@ app.get('/', (req, res) => {
     res.send('Hello World, from express');
 })
 
-app.post('/addTodo',async (req, res) => {
-    let collection = await db.collection("todo");
-    let newDocument = req.body;
-    newDocument.date = new Date();
-    let result = await collection.insertOne(newDocument);
-    console.log("rreq"+req.body);
-    res.send(result).status(204);
-});
+// app.post('/addTodo',async (req, res) => {
+//     let collection = await db.collection("todo");
+//     let newDocument = req.body;
+//     newDocument.date = new Date();
+//     let result = await collection.insertOne(newDocument);
+//     console.log("rreq"+req.body);
+//     res.send(result).status(204);
+// });
 
-app.get('/getTodos', async(req, res) => {
-    let collection = await db.collection("todo");
-    let results = await collection.find({})
+// app.get('/getTodos', async(req, res) => {
+//     let collection = await db.collection("todo");
+//     let results = await collection.find({})
       
-      .toArray();
-    res.send(results).status(200);
-});
+//       .toArray();
+//     res.send(results).status(200);
+// });
 
 app.listen(port, function () {
     console.log("Server is listening at port:" + port);
