@@ -1,0 +1,28 @@
+name: Deploy Server Side Node Application
+
+on:
+  push:
+    branches:
+      - mern-ec2-docker
+      - master
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: action/checkout@v4
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PWD }}
+      - name: Build docker image
+        run: docker build -t stevesiddu49/todo-server .
+      - name: Publish image to dockerhub
+        run: docker push stevesiddu49/todo-server:latest
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from dockerhub
+        run: docker pull stevesiddu49/todo-server:latest
+      - name: Run Docker Container
+        run: docker run -d -p 4000:4000 --name todo-sever-container -e MANGO_PASSWORD='${{ secrets.MONGO_PASSWORD }}' stevesiddu49/todo-server
