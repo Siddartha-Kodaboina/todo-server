@@ -1,18 +1,18 @@
-// const {MongoClient} = require('mongodb');
-// const password = encodeURIComponent(process.env.MONGO_DB_PASSWORD.trim());
-// const connectionString = `mongodb+srv://stevesiddu49:${password}@devcluster.konfbv0.mongodb.net/?retryWrites=true&w=majority`; 
-// const client = new MongoClient(connectionString);
+const { MongoClient } = require('mongodb');
 
-// async function connectToDatabase() {
-//   let conn;
-//   try {
-//     conn = await client.connect();
-//     console.log("Connection successful");
-//   } catch(e) {
-//     console.error(e);
-//     return null;
-//   }
-//   return conn.db("datastore");
-// }
+const password = encodeURIComponent(process.env.MONGO_DB_PASSWORD.trim());
+const connectionString = `mongodb+srv://stevesiddu49:${password}@devcluster.konfbv0.mongodb.net/?retryWrites=true&w=majority`;
+const client = new MongoClient(connectionString);
 
-// module.exports = connectToDatabase;
+async function connectToDatabase() {
+  try {
+    await client.connect();
+    // console.log("Connected to MongoDB");
+    return client.db("datastore"); // Return the database instance
+  } catch (e) {
+    console.error("Failed to connect to MongoDB", e);
+    process.exit(1);
+  }
+}
+
+module.exports = connectToDatabase; // Export the function, not its call
