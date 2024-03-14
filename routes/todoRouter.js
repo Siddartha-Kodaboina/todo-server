@@ -3,6 +3,19 @@ const router = express.Router();
 const todoController = require('../controller/todoController');
 
 // Routes
+router.get('/check', (req, res)=> {
+    try{
+        res.status(200).json({
+            message: 'It is connected and working successfully',
+        });
+    }
+    catch{
+        console.error("An error occurred", err.message);
+        res.status(500).json({
+            message: "An error occurred/Connection failed.."
+        });
+    }
+});
 
 // post: create a new todo
 router.post('/todo', todoController.createTodo);

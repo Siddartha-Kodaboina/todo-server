@@ -17,13 +17,25 @@ async function startServer() {
   app.use(cors());
   app.use(bodyParser.json());
 
+  console.log(__dirname);
   // Routes
   app.use('/api', todoRouter);
-  app.get('/', (req, res) => {
-    res.status(201).json({
-      message: 'Content retrieved successfully',
-    });
-  });
+  // app.get('/', (req, res) => {
+  //   res.status(201).json({
+  //     message: 'Content retrieved successfully',
+  //   });
+  // });
+
+  // if (process.env.NODE_ENV === 'production'){
+  //   // Serve static files from the React app
+  //   app.use(express.static(path.join(__dirname, '../react-app/build')));
+
+  //   // Handle React routing, return all requests to React app
+  //   app.get('*', function(req, res) {
+  //     res.sendFile(path.join(__dirname, '../react-app/build', 'index.html'));
+  //   });
+
+  // }
 
   app.listen(port, () => {
     console.log('Server is listening on port 4000');
