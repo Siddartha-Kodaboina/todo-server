@@ -27,6 +27,6 @@ router.get('/todo/:uid/:status_code', todoController.getTodosByUserAndStatus);
 router.get('/todo/:uid', todoController.getTodosByUser);
 
 // put: update a todo
-router.put('/todo/:id', todoController.updateTodoStatus);
+router.put('/todo/:id', todoController.updateTodo);
 
 module.exports = router;

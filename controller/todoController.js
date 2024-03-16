@@ -73,19 +73,17 @@ const getTodosByUser = async (req, res) => {
     }
 };
 
-const updateTodoStatus = async (req, res) => {
+const updateTodo = async (req, res) => {
     try {
         const db = await connectToDatabase();
         const collection = db.collection("todo");
         const todoId = req.params.id;
-        const newStatus = req.body.status;
-        const newStatusCode = parseInt(req.body.status_code);
+        const todoInfo = req.body.todoInfo;
 
         const result = await collection.updateOne(
             { _id: new ObjectId(todoId) },
             { $set: { 
-                "todoInfo.status": newStatus,
-                "todoInfo.status_code": newStatusCode
+                "todoInfo": todoInfo
             } } 
         );
 
@@ -108,5 +106,5 @@ module.exports = {
     createTodo,
     getTodosByUserAndStatus,
     getTodosByUser,
-    updateTodoStatus 
+    updateTodo 
 };
