@@ -8,7 +8,7 @@ const connectToDatabase = require('./mongoConfig');
 
 async function startServer() {
   const db = await connectToDatabase(); // Connect to the database
-  app.locals.db = db; // Store the db connection in app locals
+  // app.locals.db = db; // Store the db connection in app locals
   const port = 4000;
   
   
@@ -19,7 +19,7 @@ async function startServer() {
 
   console.log(__dirname);
   // Routes
-  app.use('/api', todoRouter);
+  app.use('/api', todoRouter(db));
   // app.get('/', (req, res) => {
   //   res.status(201).json({
   //     message: 'Content retrieved successfully',
