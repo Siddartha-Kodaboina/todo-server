@@ -17,6 +17,9 @@ jobs:
       - name: Build docker image
         run: docker build -t stevesiddu49/todo-server .
           --build-arg NODE_ENV='production'
+          --build-arg MONGO_DB_PASSWORD='${{ secrets.MONGO_DB_PASSWORD }}'
+          --build-arg REMAINDER_EMAIL_USERNAME='${{ secrets.REMAINDER_EMAIL_USERNAME }}'
+          --build-arg REMAINDER_EMAIL_PASSWORD='${{ secrets.REMAINDER_EMAIL_PASSWORD }}'
       - name: Publish image to dockerhub
         run: docker push stevesiddu49/todo-server:latest
   deploy:
@@ -32,6 +35,4 @@ jobs:
       - name: Delete old Container
         run: docker rm -f todo-server-container
       - name: Run Docker Container
-        run: docker run -d -p 4000:4000 
-          --name todo-server-container 
-          -e MONGO_DB_PASSWORD='${{ secrets.MONGO_DB_PASSWORD }}' REMAINDER_EMAIL_USERNAME='${{ secrets.REMAINDER_EMAIL_USERNAME }}' REMAINDER_EMAIL_PASSWORD='${{ secrets.REMAINDER_EMAIL_PASSWORD }}' stevesiddu49/todo-server 
+        run: docker run -d -p 4000:4000 --name todo-server-container stevesiddu49/todo-server 
