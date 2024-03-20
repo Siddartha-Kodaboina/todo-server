@@ -15,17 +15,28 @@ const todoController = (db) => {
             /* Converting the remainderTime to UTC in remainderTime exists*/
             if (newDocument.todoInfo.remainderTime) {
                 newDocument.todoInfo.remainderTime = moment.tz(newDocument.todoInfo.remainderTime,  newDocument.todoInfo.timeZone).utc();
-                console.log(newDocument.todoInfo.remainderTime);
-                console.log(newDocument.user.email);
-                const agenda = await getAgenda();
-                agenda.schedule(newDocument.todoInfo.remainderTime._d, 'send email reminder', {
-                    to: newDocument.user.email,
-                    subject: 'Todo Reminder',
-                    text: `Remember to: ${newDocument.todoInfo.task}`,
-                });
-
             }
             const result = await collection.insertOne(newDocument);
+            console.log(result);
+            const insertedDoc = await collection.findOne({_id: result.insertedId});
+            console.log(insertedDoc);
+            console.log(insertedDoc._id, typeof(insertedDoc._id));
+            if (insertedDoc.todoInfo.remainderTime) {
+                // console.log(insertedDoc.todoInfo.remainderTime); 
+                console.log(insertedDoc.user.email);
+                const agenda = await getAgenda();
+                // agenda.schedule(newDocument.todoInfo.remainderTime._d, 'send email reminder', {
+                //     to: newDocument.user.email,
+                //     subject: 'Todo Reminder',
+                //     text: `Remember to: ${newDocument.todoInfo.task}`,
+                // });
+                agenda.schedule(insertedDoc.todoInfo.remainderTime._d, 'send email reminder', {
+                    _id: insertedDoc._id,
+                    to: insertedDoc.user.email,
+                    subject: 'Your Task Awaits You 🌟, Lets Get It Done ✅',
+                    html: `Hi!<br><br>Just a swift nudge about the task you planned to conquer. Here it is:<br><br>Task: <b>${insertedDoc.todoInfo.task}</b><br>${insertedDoc.todoInfo.description}<br><br>Ready to check this off? You've got the skills to make it happen!, Let's Go 👊.<br><br>Go for it,<br>Your Partner in Getting Things Done ✨`,
+                });
+            }
             
             res.status(201).json({
                 message: 'Todo created successfully',
@@ -84,7 +95,7 @@ const todoController = (db) => {
     };
 
     const updateTodo = async (req, res) => {
-        // try {
+        try {
             const todoId = req.params.id;
             let todoInfo = req.body.todoInfo;
             console.log("updateTodo Before ", todoInfo);
@@ -100,6 +111,19 @@ const todoController = (db) => {
                 _id: new ObjectId(todoId)
             });
             console.log(result0);
+
+            // First, find and cancel the existing job
+            const agenda = await getAgenda();
+            await agenda.cancel({ 'data._id': result0._id });
+            
+            // Then schedule a new job with the updated time
+            agenda.schedule(todoInfo.remainderTime, 'send email reminder', {
+                _id: new ObjectId(todoId),
+                to: result0.user.email,
+                subject: 'Your Task Awaits You 🌟, Lets Get It Done ✅',
+                html: `Hi!<br><br>Just a swift nudge about the task you planned to conquer. Here it is:<br><br>Task: <b>${result0.todoInfo.task}</b><br>${result0.todoInfo.description}<br><br>Ready to check this off? You've got the skills to make it happen!, Let's Go 👊.<br><br>Go for it,<br>Your Partner in Getting Things Done ✨`,
+            });
+
             const result = await collection.updateOne(
                 { _id: new ObjectId(todoId) },
                 { $set: { 
@@ -115,12 +139,12 @@ const todoController = (db) => {
             res.status(200).json({
                 message: 'Todo status updated successfully',
             });
-        // } catch (err) {
-        //     console.error("An error occurred while updating the todo status:", err.message);
-        //     res.status(500).json({
-        //         message: "An error occurred while updating the todo status."
-        //     });
-        // }
+        } catch (err) {
+            console.error("An error occurred while updating the todo status:", err.message);
+            res.status(500).json({
+                message: "An error occurred while updating the todo status."
+            });
+        }
     };
 
     return {

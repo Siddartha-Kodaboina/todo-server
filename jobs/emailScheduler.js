@@ -11,8 +11,10 @@ module.exports = async () => {
   const agenda = new Agenda({ db: { address: connectionString, collection: 'agendaJobs' } });
   
   agenda.define('send email reminder', async (job) => {
-    const { to, subject, text } = job.attrs.data;
-    await sendEmail(to, subject, text);
+    // const { to, subject, text } = job.attrs.data;
+    // await sendEmail(to, subject, text);
+    const { to, subject, html } = job.attrs.data;
+    await sendEmail(to, subject, html);
   });
 
     console.log("before start");
