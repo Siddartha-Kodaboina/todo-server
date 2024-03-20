@@ -5,11 +5,23 @@ const cors = require('cors');
 const todoRouter = require('./routes/todoRouter');
 require('dotenv').config();
 const connectToDatabase = require('./mongoConfig');
+// const 
+const agendaUI = require('agenda-ui');
 
 async function startServer() {
   const db = await connectToDatabase(); // Connect to the database
-  // app.locals.db = db; // Store the db connection in app locals
+  const agenda = await require('./config/agenda')();
+  /* Setting agenda for email scheduling */
+  console.log("Agenda started");
+  console.log('Agenda instance:', agenda);
+  console.log('Agenda MongoDB connection:', agenda.mongo); 
+
+  app.use('/agenda-ui', agendaUI(agenda, { basePath: '/', pollInterval: 10000 }));
   const port = 4000;
+  // await agenda.start();
+  // Check if the mongo property is defined
+
+
   
   
   // Middleware
