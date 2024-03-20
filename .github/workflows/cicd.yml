@@ -34,5 +34,4 @@ jobs:
       - name: Run Docker Container
         run: docker run -d -p 4000:4000 
           --name todo-server-container 
-          -e MONGO_DB_PASSWORD='${{ secrets.MONGO_DB_PASSWORD }}' REMAINDER_EMAIL_USERNAME='${{ secrets.REMAINDER_EMAIL_USERNAME }}' REMAINDER_EMAIL_PASSWORD='${{ secrets.REMAINDER_EMAIL_PASSWORD }}'
-          stevesiddu49/todo-server 
+          -e MONGO_DB_PASSWORD='${{ secrets.MONGO_DB_PASSWORD }}' REMAINDER_EMAIL_USERNAME='${{ secrets.REMAINDER_EMAIL_USERNAME }}' REMAINDER_EMAIL_PASSWORD='${{ secrets.REMAINDER_EMAIL_PASSWORD }}' stevesiddu49/todo-server 
