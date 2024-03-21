@@ -102,6 +102,7 @@ const todoController = (db, agenda) => {
             console.log("updateTodo Before ", todoInfo);
             console.log("todoID : ", todoId, typeof(todoId));
             /* Converting the remainderTime to UTC in remainderTime exists*/
+            console.log("toRemTime: ", todoInfo.remainderTime);
             if (todoInfo.remainderTime) {
                 todoInfo = {...todoInfo, remainderTime: moment.tz(todoInfo.remainderTime,  todoInfo.timeZone).utc()}
                 // todoInfo.remainderTime = moment.tz(todoInfo.remainderTime._d,  todoInfo.timeZone).utc();
@@ -118,13 +119,17 @@ const todoController = (db, agenda) => {
             // const agenda = await getAgenda();
             await agenda.cancel({ 'data._id': new ObjectId(todoId) });
             
-            // Then schedule a new job with the updated time
-            agenda.schedule(todoInfo.remainderTime, 'send email reminder', {
-                _id: new ObjectId(todoId),
-                to: todo.user.email,
-                subject: 'Your Task Awaits You 🌟, Lets Get It Done ✅',
-                html: `Hi!<br><br>Just a swift nudge about the task you planned to conquer. Here it is:<br><br>Task: <b>${todoInfo.task}</b><br>${todoInfo.description}<br><br>Ready to check this off? You've got the skills to make it happen!, Let's Go 👊.<br><br>Go for it,<br>Your Partner in Getting Things Done ✨`,
-            });
+            if (todoInfo.remainderTime){
+                console.log("toRemTime: ", todoInfo.remainderTime._d);
+                // Then schedule a new job with the updated time
+                agenda.schedule(todoInfo.remainderTime._d, 'send email reminder', {
+                    _id: new ObjectId(todoId),
+                    to: todo.user.email,
+                    subject: 'Your Task Awaits You 🌟, Lets Get It Done ✅',
+                    html: `Hi!<br><br>Just a swift nudge about the task you planned to conquer. Here it is:<br><br>Task: <b>${todoInfo.task}</b><br>${todoInfo.description}<br><br>Ready to check this off? You've got the skills to make it happen!, Let's Go 👊.<br><br>Go for it,<br>Your Partner in Getting Things Done ✨`,
+                });
+            }
+            
             
             
             if (result.modifiedCount === 0) {
