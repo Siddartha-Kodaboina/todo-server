@@ -1,9 +1,9 @@
 
 
-const todoController = (db) => {
+const todoController = (db, agenda) => {
     const { ObjectId } = require('mongodb');
     const moment = require('moment-timezone');
-    const getAgenda = require('../config/agenda');
+    
     const collection = db.collection("todo");
     // agenda = agenda(db);
     const createTodo = async (req, res) => {
@@ -24,7 +24,7 @@ const todoController = (db) => {
             if (insertedDoc.todoInfo.remainderTime) {
                 // console.log(insertedDoc.todoInfo.remainderTime); 
                 console.log(insertedDoc.user.email);
-                const agenda = await getAgenda();
+                // const agenda = await getAgenda();
                 // agenda.schedule(newDocument.todoInfo.remainderTime._d, 'send email reminder', {
                 //     to: newDocument.user.email,
                 //     subject: 'Todo Reminder',
@@ -97,22 +97,15 @@ const todoController = (db) => {
     const updateTodo = async (req, res) => {
         try {
             const todoId = req.params.id;
-            let todoInfo = req.body.todoInfo;
+            const todo = req.body.todo;
+            let todoInfo = todo.todoInfo;
             console.log("updateTodo Before ", todoInfo);
             console.log("todoID : ", todoId, typeof(todoId));
             /* Converting the remainderTime to UTC in remainderTime exists*/
             if (todoInfo.remainderTime) {
                 todoInfo = {...todoInfo, remainderTime: moment.tz(todoInfo.remainderTime,  todoInfo.timeZone).utc()}
                 // todoInfo.remainderTime = moment.tz(todoInfo.remainderTime._d,  todoInfo.timeZone).utc();
-            }
-            
-            console.log("After ", todoInfo);
-            const result0 = await collection.findOne({
-                _id: new ObjectId(todoId)
-            });
-            console.log(result0);
-
-            
+            }            
 
             const result = await collection.updateOne(
                 { _id: new ObjectId(todoId) },
@@ -122,13 +115,13 @@ const todoController = (db) => {
             );
 
             // First, find and cancel the existing job
-            const agenda = await getAgenda();
-            await agenda.cancel({ 'data._id': result0._id });
+            // const agenda = await getAgenda();
+            await agenda.cancel({ 'data._id': new ObjectId(todoId) });
             
             // Then schedule a new job with the updated time
             agenda.schedule(todoInfo.remainderTime, 'send email reminder', {
                 _id: new ObjectId(todoId),
-                to: result0.user.email,
+                to: todo.user.email,
                 subject: 'Your Task Awaits You 🌟, Lets Get It Done ✅',
                 html: `Hi!<br><br>Just a swift nudge about the task you planned to conquer. Here it is:<br><br>Task: <b>${todoInfo.task}</b><br>${todoInfo.description}<br><br>Ready to check this off? You've got the skills to make it happen!, Let's Go 👊.<br><br>Go for it,<br>Your Partner in Getting Things Done ✨`,
             });

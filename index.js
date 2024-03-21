@@ -7,10 +7,11 @@ require('dotenv').config();
 const connectToDatabase = require('./mongoConfig');
 // const 
 const agendaUI = require('agenda-ui');
+const getAgenda = require('./config/agenda');
 
 async function startServer() {
   const db = await connectToDatabase(); // Connect to the database
-  const agenda = await require('./config/agenda')();
+  const agenda = await getAgenda();
   /* Setting agenda for email scheduling */
   console.log("Agenda started");
   console.log('Agenda instance:', agenda);
@@ -31,7 +32,7 @@ async function startServer() {
 
   console.log(__dirname);
   // Routes
-  app.use('/api', todoRouter(db));
+  app.use('/api', todoRouter(db, agenda));
   // app.get('/', (req, res) => {
   //   res.status(201).json({
   //     message: 'Content retrieved successfully',

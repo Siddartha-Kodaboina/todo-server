@@ -1,7 +1,7 @@
-const todoRouter = (db) => {
+const todoRouter = (db, agenda) => {
     const express = require('express');
     const router = express.Router();
-    const todoController = require('../controller/todoController')(db);
+    const todoController = require('../controller/todoController')(db, agenda);
 
     // Routes
     router.get('/check', (req, res)=> {
