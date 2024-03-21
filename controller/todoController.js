@@ -21,7 +21,7 @@ const todoController = (db, agenda) => {
             const insertedDoc = await collection.findOne({_id: result.insertedId});
             console.log(insertedDoc);
             console.log(insertedDoc._id, typeof(insertedDoc._id));
-            if (insertedDoc.todoInfo.remainderTime) {
+            if (insertedDoc.todoInfo.remainderTime && todoInfo.remainderTime.isAfter(moment.utc())) {
                 // console.log(insertedDoc.todoInfo.remainderTime); 
                 console.log(insertedDoc.user.email);
                 // const agenda = await getAgenda();
@@ -114,13 +114,13 @@ const todoController = (db, agenda) => {
                     "todoInfo": todoInfo
                 } } 
             );
-
+            
             // First, find and cancel the existing job
             // const agenda = await getAgenda();
             await agenda.cancel({ 'data._id': new ObjectId(todoId) });
             
-            if (todoInfo.remainderTime){
-                console.log("toRemTime: ", todoInfo.remainderTime._d);
+            if (todoInfo.remainderTime && todoInfo.remainderTime.isAfter(moment.utc())){
+                // console.log("toRemTime: ", todoInfo.remainderTime._d);
                 // Then schedule a new job with the updated time
                 agenda.schedule(todoInfo.remainderTime._d, 'send email reminder', {
                     _id: new ObjectId(todoId),
