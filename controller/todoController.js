@@ -112,6 +112,15 @@ const todoController = (db) => {
             });
             console.log(result0);
 
+            
+
+            const result = await collection.updateOne(
+                { _id: new ObjectId(todoId) },
+                { $set: { 
+                    "todoInfo": todoInfo
+                } } 
+            );
+
             // First, find and cancel the existing job
             const agenda = await getAgenda();
             await agenda.cancel({ 'data._id': result0._id });
@@ -123,13 +132,6 @@ const todoController = (db) => {
                 subject: 'Your Task Awaits You 🌟, Lets Get It Done ✅',
                 html: `Hi!<br><br>Just a swift nudge about the task you planned to conquer. Here it is:<br><br>Task: <b>${todoInfo.task}</b><br>${todoInfo.description}<br><br>Ready to check this off? You've got the skills to make it happen!, Let's Go 👊.<br><br>Go for it,<br>Your Partner in Getting Things Done ✨`,
             });
-
-            const result = await collection.updateOne(
-                { _id: new ObjectId(todoId) },
-                { $set: { 
-                    "todoInfo": todoInfo
-                } } 
-            );
             
             
             if (result.modifiedCount === 0) {
