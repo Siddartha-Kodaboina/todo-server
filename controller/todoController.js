@@ -121,7 +121,7 @@ const todoController = (db) => {
                 _id: new ObjectId(todoId),
                 to: result0.user.email,
                 subject: 'Your Task Awaits You 🌟, Lets Get It Done ✅',
-                html: `Hi!<br><br>Just a swift nudge about the task you planned to conquer. Here it is:<br><br>Task: <b>${result0.todoInfo.task}</b><br>${result0.todoInfo.description}<br><br>Ready to check this off? You've got the skills to make it happen!, Let's Go 👊.<br><br>Go for it,<br>Your Partner in Getting Things Done ✨`,
+                html: `Hi!<br><br>Just a swift nudge about the task you planned to conquer. Here it is:<br><br>Task: <b>${todoInfo.todoInfo.task}</b><br>${todoInfo.todoInfo.description}<br><br>Ready to check this off? You've got the skills to make it happen!, Let's Go 👊.<br><br>Go for it,<br>Your Partner in Getting Things Done ✨`,
             });
 
             const result = await collection.updateOne(
