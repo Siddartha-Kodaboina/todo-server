@@ -21,7 +21,6 @@ const transporter = nodemailer.createTransport({
 //   await transporter.sendMail(mailOptions);
 // };
 const sendEmail = async (to, subject, html) => {
-    console.log("In send email");
     const mailOptions = {
       from: 'stevesiddu49@gmail.com',
       to,

@@ -17,8 +17,6 @@ module.exports = async () => {
     await sendEmail(to, subject, html);
   });
 
-    console.log("before start");
     await agenda.start();
-    console.log("after start");
   return agenda;
 };

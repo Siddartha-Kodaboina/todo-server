@@ -11,26 +11,17 @@ const getAgenda = require('./config/agenda');
 
 async function startServer() {
   const db = await connectToDatabase(); // Connect to the database
-  const agenda = await getAgenda();
   /* Setting agenda for email scheduling */
-  console.log("Agenda started");
-  console.log('Agenda instance:', agenda);
-  console.log('Agenda MongoDB connection:', agenda.mongo); 
+  const agenda = await getAgenda();
 
   app.use('/agenda-ui', agendaUI(agenda, { basePath: '/', pollInterval: 10000 }));
   const port = 4000;
-  // await agenda.start();
-  // Check if the mongo property is defined
 
-
-  
-  
   // Middleware
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cors());
   app.use(bodyParser.json());
 
-  console.log(__dirname);
   // Routes
   app.use('/api', todoRouter(db, agenda));
   // app.get('/', (req, res) => {
@@ -56,36 +47,4 @@ async function startServer() {
 }
 
 startServer();
-
-
-// Setting Variables
-// const db = require('./mongoConfig.js');
-
-
-
-
-// Routes
-// app.use('/api', todoRouter);
-
-
-// app.post('/todos',async (req, res) => {
-//     let collection = await db.collection("todo");
-//     let newDocument = req.body;
-//     newDocument.date = new Date();
-//     let result = await collection.insertOne(newDocument);
-//     console.log("rreq"+req.body);
-//     res.send(result).status(204);
-// });
-
-// app.get('/todos', async(req, res) => {
-//     let collection = await db.collection("todo");
-//     let results = await collection.find({})
-      
-//       .toArray();
-//     res.send(results).status(200);
-// });
-
-// app.listen(port, function () {
-//     console.log("Server is listening at port:" + port);
-// });
  
